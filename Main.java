@@ -5,6 +5,9 @@ import java.awt.RenderingHints;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 class Entity {
   int posX, posY;
@@ -37,8 +40,16 @@ class Player extends Entity {
 }
 
 @SuppressWarnings("serial")
-public class Main extends JPanel {
+public class Main extends JPanel implements MouseMotionListener {
   public ArrayList<Entity> entityList = new ArrayList<Entity>();
+
+  @Override
+  public void mouseDragged(MouseEvent e) {
+  }
+  @Override
+  public void mouseMoved(MouseEvent e) {
+    System.out.println("Hello");
+  }
 
   @Override
   public void paint(Graphics g) {
@@ -66,6 +77,8 @@ public class Main extends JPanel {
     frame.setSize(800, 600);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    main.addMouseMotionListener(main);
 
     Player p = new Player();
     p.posX = 10;
