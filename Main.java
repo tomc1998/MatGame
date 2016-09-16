@@ -9,9 +9,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+class MouseCoordinates {
+  private MouseCoordinates() {}
+
+  public static int mouseX = 0;
+  public static int mouseY = 0;
+}
+
 class Entity {
-  int posX, posY;
-  int velX, velY;
+  float posX, posY;
+  float velX, velY;
+  float speed = 4;
 
   public void update() {
     posX += velX;
@@ -26,7 +34,7 @@ class Enemy extends Entity {
   public void render(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
     g2d.setColor(new Color(255, 0, 0));
-    g2d.fillRect(posX, posY, 32, 32);
+    g2d.fillRect((int)posX, (int)posY, (int)32, (int)32);
   }
 }
 
@@ -35,14 +43,23 @@ class Player extends Entity {
   public void render(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
     g2d.setColor(new Color(0, 255, 0));
-    g2d.fillRect(posX, posY, 32, 32);
-
+    g2d.fillRect((int)posX, (int)posY, (int)32, (int)32);
   }
   @Override
-  public void update(){
-	  velX = 1;
-	  velY = 1;
-	  super.update();
+  public void update() {
+    int mouseX = MouseCoordinates.mouseX;
+    int mouseY = MouseCoordinates.mouseY;
+    double angle = Math.atan2((mouseY - posY), (mouseX - posX));
+    velX = (int) (Math.cos(angle) * (double) speed);
+    velY = (int) (Math.sin(angle) * (double) speed);
+    float xDistance = mouseX - posX;
+    float yDistance = mouseY - posY;
+    float totalDistance = (float)Math.sqrt(xDistance*xDistance + yDistance*yDistance);
+    if (totalDistance < 10) {
+      velX = 0;
+      velY = 0;
+    }
+    super.update();
   }
 }
 
@@ -51,22 +68,13 @@ public class Main extends JPanel implements MouseMotionListener {
   public ArrayList<Entity> entityList = new ArrayList<Entity>();
 
   @Override
-  public void mouseDragged(MouseEvent e) {
+  public void mouseDragged(MouseEvent ev) {
   }
+
   @Override
-  public void mouseMoved(MouseEvent e) {
-    System.out.println("Hello");
-	for (Entity ev:  entityList){
-		if(ev instanceof Player){
-			//Player p = (Player) ev;
-			int mouseX =MouseInfo.getPointerInfo().getLocation().x;
-			int mouseY =MouseInfo.getPointerInfo().getLocation().y;
-			ev.posX = mouseX;
-			ev.posY = mouseY;
-			System.out.println(mouseX);
-			System.out.println(mouseY);
-		}
-	}
+  public void mouseMoved(MouseEvent ev) {
+    MouseCoordinates.mouseX = ev.getX();
+    MouseCoordinates.mouseY = ev.getY();
   }
 
   @Override
