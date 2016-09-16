@@ -36,6 +36,13 @@ class Player extends Entity {
     Graphics2D g2d = (Graphics2D) g;
     g2d.setColor(new Color(0, 255, 0));
     g2d.fillRect(posX, posY, 32, 32);
+
+  }
+  @Override
+  public void update(){
+	  velX = 1;
+	  velY = 1;
+	  super.update();
   }
 }
 
@@ -49,6 +56,17 @@ public class Main extends JPanel implements MouseMotionListener {
   @Override
   public void mouseMoved(MouseEvent e) {
     System.out.println("Hello");
+	for (Entity ev:  entityList){
+		if(ev instanceof Player){
+			//Player p = (Player) ev;
+			int mouseX =MouseInfo.getPointerInfo().getLocation().x;
+			int mouseY =MouseInfo.getPointerInfo().getLocation().y;
+			ev.posX = mouseX;
+			ev.posY = mouseY;
+			System.out.println(mouseX);
+			System.out.println(mouseY);
+		}
+	}
   }
 
   @Override
